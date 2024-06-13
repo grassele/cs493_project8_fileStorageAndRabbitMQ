@@ -12,7 +12,8 @@ const { extractValidFields } = require('../lib/validation')
  */
 const PhotoSchema = {
   businessId: { required: true },
-  caption: { required: false }
+  caption: { required: false },
+  // file: {required: true} // apparently having this in schema breaks validation because the file data isn't included in req.body
 }
 exports.PhotoSchema = PhotoSchema
 
@@ -21,7 +22,9 @@ exports.PhotoSchema = PhotoSchema
  * a Promise that resolves to the ID of the newly-created photo entry.
  */
 async function insertNewPhoto(photo) {
-  photo = extractValidFields(photo, PhotoSchema)
+  // photo = extractValidFields(photo, PhotoSchema)
+  photo = extractValidFields(photo, {'businessId': {required: true}, 'caption': {required: false}})
+  console.log(`photo we are inserting into database: ${JSON.stringify(photo)}`)
   photo.businessId = ObjectId(photo.businessId)
   const db = getDbReference()
   const collection = db.collection('photos')

@@ -4,10 +4,7 @@ The goal of this assignment is to incorporate file storage into our API
 and to start using RabbitMQ to perform some basic offline data
 enrichment.  There are a few parts to this assignment, described below.
 
-You are provided some starter code in this repository that uses MongoDB
-as a backing to implement a reduced subset of the businesses API we've
-been working with all term.  The starter code contains the following
-components:
+Some notes:
   * An API server is implemented in `server.js`.
   * Individual API routes are modularized within the `api/` directory.
   * Models are implemented in the `models/` directory.
@@ -25,10 +22,6 @@ components:
     relies on some environment variables being set in the included
     `.env` file.
 
-Feel free to use this code as your starting point for this assignment.
-You may also use your own solution to assignment 2 and/or assignment 3
-as your starting point if you like.
-
 ## 1. Support photo file uploads
 
 Your first task for the assignment is to modify the `POST /photos`
@@ -40,6 +33,27 @@ the `file` field should specifically contain raw binary data for an
 image file.  The endpoint should accept images in either the JPEG
 (`image/jpeg`) or PNG (`image/png`) format.  Files in any other format
 should result in the API server returning an error response.
+
+Here is an example curl request that can be used to test this functionality:
+```
+POST /photos HTTP/1.1
+Host: localhost
+Content-Type: multipart/form-data;boundary="theBoundary"
+
+--theBoundary
+Content-Disposition: form-data; name="businessId"
+
+<businessId here>
+--theBoundary
+Content-Disposition: form-data; name="caption"
+
+<caption here>
+--theBoundary
+Content-Disposition: form-data; name="file"; filename="<filename.extension>"
+
+<image_binary_data_goes_here>
+--theBoundary--
+```
 
 ## 2. Store uploaded photo data in GridFS
 
